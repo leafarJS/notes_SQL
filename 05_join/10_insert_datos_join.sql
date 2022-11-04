@@ -3,6 +3,8 @@ create database if not exists curso_sql;
 use curso_sql;
 
 drop table productos;
+drop table proveedor;
+
 create table if not exists productos(
 id int unsigned not null auto_increment,
 nombre varchar(50) not null,
@@ -14,16 +16,22 @@ primary key(id),
 unique index (nombre),
 foreign key(proveedorid) references proveedor(id)
 );
-drop table proveedor;
+
 create table if not exists proveedor(
 id int unsigned not null auto_increment,
 nombre varchar(50),
 primary key(id),
 unique index (nombre)
 );
-show tables;
 
-#clave foranea es la representación de un campo que es la clave primaria de otra tabla 
+describe productos;
+describe proveedor;
+
+
+insert into proveedor (nombre) values('Lenovo');
+insert into proveedor (nombre) values('Logitech');
+insert into proveedor (nombre) values('Microsoft'); 
+insert into proveedor (nombre) values('HP');
 
 insert into productos(nombre, descripcion, proveedorid, precio, cantidad) 
 values('Lenovo 310', 'La mejor laptop', 1, 100, 50);
@@ -42,29 +50,19 @@ values('Volante Gamer', 'El mejor volante para jugar', 2, 800, 5);
 insert into productos(nombre, descripcion, proveedorid, precio, cantidad) 
 values('Disco duro', 'Obten mas capacidad', 3, 70, 80);
 
-insert into proveedor(nombre) values('Lenovo');
-insert into proveedor(nombre) values('Logitech');
-insert into proveedor(nombre) values('Microsoft'); 
-insert into proveedor(nombre) values('HP');
 
-show tables;
 select * from productos;
-describe productos;
-
 select * from proveedor;
-describe proveedor;
 
-#join entre tablas 
-select * from productos join proveedor on productos.proveedorid=proveedor.id;
+#insertar datos buscando en valor en otra tabla
+insert into productos(nombre, descripcion, precio, proveedorid, cantidad)
+select 'Teclado', 'Descripción del producto', 100, id, 500
+from proveedor where nombre = 'Logitech';
 
-#p es un alias producto, y pro un alias de proveedor 
-select p.nombre, p.descripcion, p.precio, pro.nombre from productos 
-as p
-join proveedor 
-as pro
-on p.proveedorid= pro.id;
+select * from productos;
 
-# left join 
-select * from productos 
-left join proveedor
-on proveedor.id=productos.proveedorid;
+
+
+
+
+

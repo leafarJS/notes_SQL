@@ -3,6 +3,7 @@ create database if not exists curso_sql;
 use curso_sql;
 
 drop table productos;
+
 create table if not exists productos(
 id int unsigned not null auto_increment,
 nombre varchar(50) not null,
@@ -11,19 +12,27 @@ proveedorid int unsigned not null,
 precio decimal(5,2),
 cantidad smallint unsigned default 0,
 primary key(id),
-unique index (nombre),
-foreign key(proveedorid) references proveedor(id)
+unique index (nombre)
 );
-drop table proveedor;
+
+describe productos;
+
+select * from productos;
+
 create table if not exists proveedor(
 id int unsigned not null auto_increment,
 nombre varchar(50),
 primary key(id),
 unique index (nombre)
 );
-show tables;
 
-#clave foranea es la representación de un campo que es la clave primaria de otra tabla 
+select * from proveedor;
+
+
+insert into proveedor (nombre) values('Lenovo');
+insert into proveedor (nombre) values('Logitech');
+insert into proveedor (nombre) values('Microsoft'); 
+insert into proveedor (nombre) values('HP');
 
 insert into productos(nombre, descripcion, proveedorid, precio, cantidad) 
 values('Lenovo 310', 'La mejor laptop', 1, 100, 50);
@@ -42,29 +51,35 @@ values('Volante Gamer', 'El mejor volante para jugar', 2, 800, 5);
 insert into productos(nombre, descripcion, proveedorid, precio, cantidad) 
 values('Disco duro', 'Obten mas capacidad', 3, 70, 80);
 
-insert into proveedor(nombre) values('Lenovo');
-insert into proveedor(nombre) values('Logitech');
-insert into proveedor(nombre) values('Microsoft'); 
-insert into proveedor(nombre) values('HP');
-
-show tables;
-select * from productos;
-describe productos;
-
+select * from productos; 
 select * from proveedor;
-describe proveedor;
 
-#join entre tablas 
-select * from productos join proveedor on productos.proveedorid=proveedor.id;
+ #funcion de control if case con varias tablas 
+ select pro.nombre,
+ if(count(p.proveedorid)> 0, 'Si', 'No') as consulta
+ from proveedor as pro
+ left join productos as p
+ on pro.id = p.proveedorid
+ group by pro.nombre;
+ 
+ select pro.nombre, 
+ case count(p.proveedorid) when 0 then 'No'
+ else 'Si' end as 'consulta'
+ from proveedor as pro
+ left join productos as p
+ on pro.id = p.proveedorid
+ group by pro.nombre;
+ 
+ 
+ # variables 
+ #@nombreVariable:=
 
-#p es un alias producto, y pro un alias de proveedor 
-select p.nombre, p.descripcion, p.precio, pro.nombre from productos 
-as p
-join proveedor 
-as pro
-on p.proveedorid= pro.id;
+select @precioMayor:= max(precio) from productos;
 
-# left join 
-select * from productos 
-left join proveedor
-on proveedor.id=productos.proveedorid;
+select * from productos where precio = @precioMayor;
+
+select p.nombre, p.descripcion, pro.nombre
+from productos as p
+join proveedor as pro
+on p.proveedorid = pro.id
+where p.precio = @precioMayor;

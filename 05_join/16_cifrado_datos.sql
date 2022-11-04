@@ -3,6 +3,8 @@ create database if not exists curso_sql;
 use curso_sql;
 
 drop table productos;
+drop table proveedor;
+
 create table if not exists productos(
 id int unsigned not null auto_increment,
 nombre varchar(50) not null,
@@ -14,16 +16,22 @@ primary key(id),
 unique index (nombre),
 foreign key(proveedorid) references proveedor(id)
 );
-drop table proveedor;
+
 create table if not exists proveedor(
 id int unsigned not null auto_increment,
 nombre varchar(50),
 primary key(id),
 unique index (nombre)
 );
-show tables;
 
-#clave foranea es la representación de un campo que es la clave primaria de otra tabla 
+describe productos;
+describe proveedor;
+
+
+insert into proveedor (nombre) values('Lenovo');
+insert into proveedor (nombre) values('Logitech');
+insert into proveedor (nombre) values('Microsoft'); 
+insert into proveedor (nombre) values('HP');
 
 insert into productos(nombre, descripcion, proveedorid, precio, cantidad) 
 values('Lenovo 310', 'La mejor laptop', 1, 100, 50);
@@ -42,29 +50,31 @@ values('Volante Gamer', 'El mejor volante para jugar', 2, 800, 5);
 insert into productos(nombre, descripcion, proveedorid, precio, cantidad) 
 values('Disco duro', 'Obten mas capacidad', 3, 70, 80);
 
-insert into proveedor(nombre) values('Lenovo');
-insert into proveedor(nombre) values('Logitech');
-insert into proveedor(nombre) values('Microsoft'); 
-insert into proveedor(nombre) values('HP');
 
-show tables;
 select * from productos;
-describe productos;
-
 select * from proveedor;
-describe proveedor;
 
-#join entre tablas 
-select * from productos join proveedor on productos.proveedorid=proveedor.id;
+create table if not exists clientes(
+nombre varchar(50),
+mail varchar(50),
+tarjetaCredito blob,
+primary key(nombre)
+);
 
-#p es un alias producto, y pro un alias de proveedor 
-select p.nombre, p.descripcion, p.precio, pro.nombre from productos 
-as p
-join proveedor 
-as pro
-on p.proveedorid= pro.id;
+describe clientes;
+select * from clientes;
 
-# left join 
-select * from productos 
-left join proveedor
-on proveedor.id=productos.proveedorid;
+# aes_encrypt("dato a encriptar", "clave de encriptacion")
+
+insert into clientes values ('Marcos Luis','marcosluis@gmail.com',aes_encrypt('5390700823285988','xyz123'));
+insert into clientes values ('Ganzalez Ana','gonzalesa@gmail.com',aes_encrypt('4567230823285445','xyz123'));
+insert into clientes values ('Lopez German','lopezg@yahoo.com',aes_encrypt('7840704453285443','xyz123'));
+
+select * from clientes;
+
+select tarjetaCredito from clientes;
+
+#desencriptar
+select cast(aes_decrypt(tarjetaCredito, 'xyz123')as char) from clientes;
+
+select tarjetaCredito from clientes;

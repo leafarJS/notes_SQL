@@ -68,3 +68,31 @@ on p.proveedorid= pro.id;
 select * from productos 
 left join proveedor
 on proveedor.id=productos.proveedorid;
+
+#right join
+select * from proveedor
+right join productos
+on proveedor.id = productos.proveedorid;
+
+#inner join
+select p.nombre, p.descripcion, p.precio, pro.nombre from proveedor as pro
+inner join productos as p
+on pro.id = proveedorid = pro.id;
+
+#straight join 
+select p.nombre, p.descripcion, p.precio, pro.nombre from proveedor as pro
+straight_join productos as p
+on pro.id = proveedorid = pro.id;
+
+#group_by join
+select pro.nombre, count(p.proveedorid) as 'Cantidad de Productos'
+from proveedor as pro
+join productos as p
+on pro.id = p.proveedorid
+group by pro.nombre;
+
+select pro.nombre, max(p.precio) as 'Mayor Precio'
+from proveedor as pro
+join productos as p
+on p.proveedorid = pro.id
+group by pro.nombre;
